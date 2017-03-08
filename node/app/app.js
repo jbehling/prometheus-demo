@@ -3,7 +3,18 @@ var faker = require('faker');
 var app = express();
 var client = require('prom-client');
 var register = client.register;
+var morgan = require('morgan');
+const json = require('morgan-json');
+var bunyan = require('bunyan');
+var bunyanRequest = require('bunyan-request');
+var app = express();
+var logger = bunyan.createLogger({name: 'My App'});
+var requestLogger = bunyanRequest({
+      logger: logger,
+      headerName: 'x-request-id'
+});
 
+app.use(requestLogger);
 
 app.get('/metrics', function(req, res) {
     res.end(register.metrics());

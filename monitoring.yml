@@ -1,0 +1,35 @@
+version: '2'
+services:
+  fluentd:
+    build:
+      context: fluentd
+    network_mode: host
+    ports:
+    - 24224
+  kibana:
+    image: kibana:5.2.2
+    network_mode: host
+    environment:
+      ELASTICSEARCH_URL: http://localhost:9200
+    ports:
+      - 5601:5601
+  elasticsearch:
+    network_mode: host
+    image: elasticsearch:5.2.2-alpine
+    ports:
+      - 9200:9200
+  prometheus:
+    network_mode: host
+    image: prom/prometheus:latest
+    volumes:
+      - "$PWD/prometheus.yml:/etc/prometheus/prometheus.yml"
+    ports:
+      - 9090:9090
+  grafana:
+    network_mode: host
+    image: grafana/grafana:latest
+    environment:
+      GF_SERVER_ROOT: "http://localhost:3000"
+      GF_SECURITY_ADMIN_PASSWORD: "grafana"
+    ports:
+      - 3000:3000

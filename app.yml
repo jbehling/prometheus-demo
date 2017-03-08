@@ -1,0 +1,14 @@
+version: '2'
+services:
+  node:
+    network_mode: host
+    hostname: app
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: "127.0.0.1:24224"
+        tag: "docker.app.{{.ID}}"
+    build: 
+      context: node
+    ports:
+      - 8080:8080
